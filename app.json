@@ -9,7 +9,11 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSCameraUsageDescription": "Used to control the flashlight as a reward signal"
+      },
+      "bundleIdentifier": "com.anonymous.JustPutItDownApp"
     },
     "android": {
       "adaptiveIcon": {
