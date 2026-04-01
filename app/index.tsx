@@ -43,7 +43,7 @@ export default function HomeScreen() {
         <Pressable
           style={styles.circle}
           onPress={() => {
-            router.push("/active");
+            router.push("/onboarding");
           }}
         >
           <Text style={styles.readyText}>Ready</Text>
