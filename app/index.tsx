@@ -1,23 +1,56 @@
+import { Ionicons } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
+import { useEffect, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-
 export default function HomeScreen() {
+  const router = useRouter();
+
+  const [curMantra, setMantra] = useState("");
+
+  useEffect(() => {
+    const MANTRAS = [
+      "Your phone will still be boring later",
+      "Nothing important is happening on Twitter",
+      "That email can definitely wait",
+      "Your screen time report is judging you",
+      "Touch grass. Seriously.",
+      "Your ex isn't thinking about you either",
+      "The group chat will survive without you",
+      "That notification was probably spam anyway",
+      "Your plant needs water more than you need TikTok",
+      "Instagram explore page will still be there",
+    ];
+    const randMantra = Math.floor(Math.random() * MANTRAS.length);
+    setMantra(MANTRAS[randMantra]);
+  }, []);
+
   return (
     <SafeAreaView style={styles.safe}>
       {/* Header */}
       <View style={styles.header}>
-        <Text style={styles.greeting}>Hey, Josh</Text>
-        <Pressable style={styles.iconButton}>
-          <Text style={{ color: "#FFFFFF" }}>I</Text>
+        <Text style={styles.greeting}>Hey, Josh.</Text>
+        <Pressable
+          style={styles.iconButton}
+          onPress={() => {
+            router.push("/leaderboard");
+          }}
+        >
+          <Ionicons name="list" size={20} color="#FFFFFF" />
         </Pressable>
       </View>
       <View style={styles.circleContainer}>
-        <Pressable style={styles.circle}>
+        <Pressable
+          style={styles.circle}
+          onPress={() => {
+            router.push("/active");
+          }}
+        >
           <Text style={styles.readyText}>Ready</Text>
           <Text style={styles.tapText}>Tap to Begin</Text>
         </Pressable>
       </View>
-      <Text style={styles.mantra}>Your screen time report is judging you</Text>
+      <Text style={styles.mantra}>{curMantra}</Text>
       <Text style={styles.hint}>Place your phone face down to begin</Text>
 
       {/* Stats */}
@@ -51,7 +84,7 @@ const styles = StyleSheet.create({
     margin: 32,
   },
   greeting: {
-    fontSize: 15,
+    fontSize: 20,
     fontWeight: "500",
     color: "rgba(255, 255, 255, 0.7)",
   },

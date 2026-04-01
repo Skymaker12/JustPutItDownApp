@@ -14,8 +14,17 @@ export default function RootLayout() {
 
   return (
     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-      <Stack screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="leaderboard" options={{ presentation: "modal" }} />
+      <Stack
+        screenOptions={{
+          headerShown: false,
+          animation: "fade",
+          animationDuration: 150,
+        }}
+      >
+        <Stack.Screen
+          name="leaderboard"
+          options={{ presentation: "modal", animation: "default" }}
+        />
         <Stack.Screen name="active" />
         <Stack.Screen name="index" />
         <Stack.Screen name="onboarding" />
