@@ -43,7 +43,6 @@ export default function OnboardingPage() {
             }
             onPress={() => {
               saveUsername(username);
-              setUsername(username);
               router.push("/");
             }}
             disabled={username.trim().length === 0}

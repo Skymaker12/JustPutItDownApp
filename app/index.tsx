@@ -1,4 +1,9 @@
-import { getUsername } from "@/utils/storage";
+import {
+  formatTimeCompact,
+  getBestSession,
+  getLastSession,
+  getUsername,
+} from "@/utils/storage";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
@@ -8,6 +13,9 @@ export default function HomeScreen() {
   const router = useRouter();
 
   const [curMantra, setMantra] = useState("");
+  const [bestSession, setBestSession] = useState<number | null>(0);
+  const [lastSession, setLastSession] = useState<number | null>(0);
+  const [username, setUsername] = useState<string | null>("");
 
   useEffect(() => {
     const MANTRAS = [
@@ -22,15 +30,25 @@ export default function HomeScreen() {
       "Your plant needs water more than you need TikTok",
       "Instagram explore page will still be there",
     ];
+    async function loadData() {
+      const last = await getLastSession();
+      const best = await getBestSession();
+      const username = await getUsername();
+      setBestSession(best);
+      setLastSession(last);
+      setUsername(username);
+    }
+
     const randMantra = Math.floor(Math.random() * MANTRAS.length);
     setMantra(MANTRAS[randMantra]);
+    loadData();
   }, []);
 
   return (
     <SafeAreaView style={styles.safe}>
       {/* Header */}
       <View style={styles.header}>
-        <Text style={styles.greeting}>Hey, {getUsername()}.</Text>
+        <Text style={styles.greeting}>Hey, {username}.</Text>
         <Pressable
           style={styles.iconButton}
           onPress={() => {
@@ -58,11 +76,15 @@ export default function HomeScreen() {
       <View style={styles.statsRow}>
         <View style={styles.statCard}>
           <Text style={styles.statLabel}>Best Session</Text>
-          <Text style={styles.statValue}>-</Text>
+          <Text style={styles.statValue}>
+            {bestSession ? formatTimeCompact(bestSession) : "-"}
+          </Text>
         </View>
         <View style={styles.statCard}>
           <Text style={styles.statLabel}>Last Session</Text>
-          <Text style={styles.statValue}>-</Text>
+          <Text style={styles.statValue}>
+            {lastSession ? formatTimeCompact(lastSession) : "-"}
+          </Text>
         </View>
       </View>
     </SafeAreaView>
