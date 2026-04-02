@@ -1,3 +1,4 @@
+import { saveUsername } from "@/utils/storage";
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import {
@@ -41,6 +42,8 @@ export default function OnboardingPage() {
               username.trim().length > 0 ? styles.submitOn : styles.submitOff
             }
             onPress={() => {
+              saveUsername(username);
+              setUsername(username);
               router.push("/");
             }}
             disabled={username.trim().length === 0}

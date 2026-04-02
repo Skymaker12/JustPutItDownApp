@@ -1,3 +1,4 @@
+import { getUsername } from "@/utils/storage";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
@@ -29,7 +30,7 @@ export default function HomeScreen() {
     <SafeAreaView style={styles.safe}>
       {/* Header */}
       <View style={styles.header}>
-        <Text style={styles.greeting}>Hey, Josh.</Text>
+        <Text style={styles.greeting}>Hey, {getUsername()}.</Text>
         <Pressable
           style={styles.iconButton}
           onPress={() => {
