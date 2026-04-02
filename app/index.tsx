@@ -5,6 +5,7 @@ import {
   getUsername,
 } from "@/utils/storage";
 import { Ionicons } from "@expo/vector-icons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
@@ -16,6 +17,7 @@ export default function HomeScreen() {
   const [bestSession, setBestSession] = useState<number | null>(0);
   const [lastSession, setLastSession] = useState<number | null>(0);
   const [username, setUsername] = useState<string | null>("");
+  const [isloading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const MANTRAS = [
@@ -34,15 +36,25 @@ export default function HomeScreen() {
       const last = await getLastSession();
       const best = await getBestSession();
       const username = await getUsername();
+      const name = await getUsername();
+
+      if (!name) {
+        router.replace("/onboarding");
+        return;
+      }
+
       setBestSession(best);
       setLastSession(last);
       setUsername(username);
+      setIsLoading(false);
     }
 
     const randMantra = Math.floor(Math.random() * MANTRAS.length);
     setMantra(MANTRAS[randMantra]);
     loadData();
-  }, []);
+  }, [router]);
+
+  if (isloading) return null;
 
   return (
     <SafeAreaView style={styles.safe}>
@@ -87,6 +99,14 @@ export default function HomeScreen() {
           </Text>
         </View>
       </View>
+      <Pressable
+        onPress={() => {
+          AsyncStorage.clear();
+          alert("Async Storage Cleared");
+        }}
+      >
+        <Text style={{ color: "red", paddingLeft: 16 }}>Reset Storage</Text>
+      </Pressable>
     </SafeAreaView>
   );
 }
