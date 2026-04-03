@@ -1,4 +1,9 @@
-import { formatTimeCompactSeconds } from "@/utils/storage";
+import {
+  formatTimeCompactSeconds,
+  getBestSession,
+  saveBestSession,
+  saveLastSession,
+} from "@/utils/storage";
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
@@ -19,8 +24,14 @@ export default function ActivePage() {
           {formatTimeCompactSeconds(elapsed)}
         </Text>
         <Pressable
-          onPress={() => {
+          onPress={async () => {
             alert("Pickup Simulated");
+            await saveLastSession(elapsed);
+            const best = await getBestSession();
+            if (elapsed > (best ?? 0)) {
+              await saveBestSession(elapsed);
+            }
+
             router.back();
           }}
         >
