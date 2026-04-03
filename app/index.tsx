@@ -74,19 +74,13 @@ export default function HomeScreen() {
           <Ionicons name="list" size={20} color="#FFFFFF" />
         </Pressable>
       </View>
-      <View style={styles.circleContainer}>
-        <Pressable
-          style={styles.circle}
-          onPress={() => {
-            router.push("/active");
-          }}
-        >
-          <Text style={styles.readyText}>Ready</Text>
-          <Text style={styles.tapText}>Tap to Begin</Text>
-        </Pressable>
+      <View style={styles.mainTextContainer}>
+        <Text style={styles.mainText}>Put it Down</Text>
+        <Text style={styles.subtitleText}>
+          Put your phone face down on the table to begin.
+        </Text>
       </View>
       <Text style={styles.mantra}>{curMantra}</Text>
-      <Text style={styles.hint}>Place your phone face down to begin</Text>
 
       {/* Stats */}
       <View style={styles.statsRow}>
@@ -109,6 +103,16 @@ export default function HomeScreen() {
           alert("Async Storage Cleared");
         }}
       >
+        <Text style={{ color: "red", paddingLeft: 16 }}>
+          Start Demo Session
+        </Text>
+      </Pressable>
+      <Pressable
+        onPress={() => {
+          router.push("/active");
+          alert("Async Storage Cleared");
+        }}
+      >
         <Text style={{ color: "red", paddingLeft: 16 }}>Reset Storage</Text>
       </Pressable>
     </SafeAreaView>
@@ -119,6 +123,7 @@ const styles = StyleSheet.create({
   safe: {
     flex: 1,
     backgroundColor: "#0A0A0A",
+    padding: 16,
   },
   container: {
     flex: 1,
@@ -128,7 +133,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    margin: 32,
+    margin: 24,
   },
   greeting: {
     fontSize: 20,
@@ -145,32 +150,30 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "rgba(255, 255, 255, 0.2)",
   },
-  circleContainer: {
+  mainTextContainer: {
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
   },
-  circle: {
-    width: 288,
-    height: 288,
-    borderRadius: 144,
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "rgba(255, 107, 53, 0.15)",
-    borderWidth: 1,
-    borderColor: "rgba(255, 255, 255, 0.2)",
+  mainText: {
+    color: "#FFFFFF",
+    fontSize: 55,
+    fontWeight: "bold",
+    letterSpacing: -1,
+  },
+  subtitleText: {
+    color: "#969696",
+    fontSize: 16,
+    fontWeight: "600",
+    maxWidth: 250,
+    textAlign: "center",
+    paddingTop: 10,
   },
   readyText: {
     fontSize: 56,
     fontWeight: "500",
     color: "#FFFFFF",
     letterSpacing: -1,
-  },
-  tapText: {
-    fontSize: 14,
-    fontWeight: "500",
-    color: "rgba(255, 255, 255, 0.6)",
-    marginTop: 4,
   },
   mantra: {
     textAlign: "center",
@@ -179,13 +182,7 @@ const styles = StyleSheet.create({
     color: "rgba(255, 255, 255, 0.5)",
     paddingHorizontal: 16,
     marginBottom: 8,
-  },
-  hint: {
-    textAlign: "center",
-    fontSize: 13,
-    fontWeight: "500",
-    color: "rgba(255, 255, 255, 0.4)",
-    marginBottom: 24,
+    paddingBottom: 12,
   },
   statsRow: {
     flexDirection: "row",
