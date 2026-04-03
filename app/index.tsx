@@ -6,8 +6,8 @@ import {
 } from "@/utils/storage";
 import { Ionicons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useRouter } from "expo-router";
-import { useEffect, useState } from "react";
+import { useFocusEffect, useRouter } from "expo-router";
+import { useCallback, useEffect, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 export default function HomeScreen() {
@@ -18,6 +18,28 @@ export default function HomeScreen() {
   const [lastSession, setLastSession] = useState<number | null>(0);
   const [username, setUsername] = useState<string | null>("");
   const [isloading, setIsLoading] = useState(true);
+
+  useFocusEffect(
+    useCallback(() => {
+      async function loadData() {
+        const last = await getLastSession();
+        const best = await getBestSession();
+        const username = await getUsername();
+
+        if (!username) {
+          router.replace("/onboarding");
+          return;
+        }
+
+        setBestSession(best);
+        setLastSession(last);
+        setUsername(username);
+        setIsLoading(false);
+      }
+
+      loadData();
+    }, [router]),
+  );
 
   useEffect(() => {
     const MANTRAS = [
@@ -32,27 +54,9 @@ export default function HomeScreen() {
       "Your plant needs water more than you need TikTok",
       "Instagram explore page will still be there",
     ];
-    async function loadData() {
-      const last = await getLastSession();
-      const best = await getBestSession();
-      const username = await getUsername();
-      const name = await getUsername();
-
-      if (!name) {
-        router.replace("/onboarding");
-        return;
-      }
-
-      setBestSession(best);
-      setLastSession(last);
-      setUsername(username);
-      setIsLoading(false);
-    }
-
     const randMantra = Math.floor(Math.random() * MANTRAS.length);
     setMantra(MANTRAS[randMantra]);
-    loadData();
-  }, [router]);
+  }, []);
 
   if (isloading) return null;
 
@@ -74,7 +78,7 @@ export default function HomeScreen() {
         <Pressable
           style={styles.circle}
           onPress={() => {
-            router.push("/onboarding");
+            router.push("/active");
           }}
         >
           <Text style={styles.readyText}>Ready</Text>

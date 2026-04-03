@@ -28,6 +28,7 @@ export default function RootLayout() {
         <Stack.Screen name="active" />
         <Stack.Screen name="index" />
         <Stack.Screen name="onboarding" />
+        <Stack.Screen name="cooldown" />
       </Stack>
       <StatusBar style="light" />
     </ThemeProvider>

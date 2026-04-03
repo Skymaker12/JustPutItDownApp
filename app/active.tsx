@@ -1,1 +1,50 @@
-export default function ActivePage() {}
+import { formatTimeCompactSeconds } from "@/utils/storage";
+import { useRouter } from "expo-router";
+import { useEffect, useState } from "react";
+import { Pressable, StyleSheet, Text, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+export default function ActivePage() {
+  const [elapsed, setElapsed] = useState(0);
+  const router = useRouter();
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setElapsed((prev) => prev + 1);
+    }, 1000);
+    return () => clearInterval(interval);
+  }, []);
+  return (
+    <SafeAreaView style={styles.safe}>
+      <View style={styles.container}>
+        <Text style={styles.timerText}>
+          {formatTimeCompactSeconds(elapsed)}
+        </Text>
+        <Pressable
+          onPress={() => {
+            alert("Pickup Simulated");
+            router.back();
+          }}
+        >
+          <Text style={{ color: "red", paddingLeft: 16 }}>Simulate Pickup</Text>
+        </Pressable>
+      </View>
+    </SafeAreaView>
+  );
+}
+
+const styles = StyleSheet.create({
+  safe: {
+    flex: 1,
+    backgroundColor: "#0A0A0A",
+  },
+  container: {
+    flex: 1,
+    paddingHorizontal: 24,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  timerText: {
+    color: "#FFFFFF",
+    fontWeight: "bold",
+    fontSize: 64,
+  },
+});
