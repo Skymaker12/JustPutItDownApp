@@ -59,3 +59,9 @@ const styles = StyleSheet.create({
     fontSize: 64,
   },
 });
+
+async function checkBest(elapsed: number) {
+  if (elapsed > ((await getBestSession()) ?? 0)) {
+    saveBestSession(elapsed);
+  }
+}

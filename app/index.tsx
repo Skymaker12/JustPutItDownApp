@@ -7,7 +7,7 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFocusEffect, useRouter } from "expo-router";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 export default function HomeScreen() {
@@ -34,29 +34,27 @@ export default function HomeScreen() {
         setBestSession(best);
         setLastSession(last);
         setUsername(username);
-        setIsLoading(false);
       }
 
       loadData();
+
+      const MANTRAS = [
+        "Your phone will still be boring later",
+        "Nothing important is happening on Twitter",
+        "That email can definitely wait",
+        "Your screen time report is judging you",
+        "Touch grass. Seriously.",
+        "Your ex isn't thinking about you either",
+        "The group chat will survive without you",
+        "That notification was probably spam anyway",
+        "Your plant needs water more than you need TikTok",
+        "Instagram explore page will still be there",
+      ];
+      const randMantra = Math.floor(Math.random() * MANTRAS.length);
+      setMantra(MANTRAS[randMantra]);
+      setIsLoading(false);
     }, [router]),
   );
-
-  useEffect(() => {
-    const MANTRAS = [
-      "Your phone will still be boring later",
-      "Nothing important is happening on Twitter",
-      "That email can definitely wait",
-      "Your screen time report is judging you",
-      "Touch grass. Seriously.",
-      "Your ex isn't thinking about you either",
-      "The group chat will survive without you",
-      "That notification was probably spam anyway",
-      "Your plant needs water more than you need TikTok",
-      "Instagram explore page will still be there",
-    ];
-    const randMantra = Math.floor(Math.random() * MANTRAS.length);
-    setMantra(MANTRAS[randMantra]);
-  }, []);
 
   if (isloading) return null;
 
