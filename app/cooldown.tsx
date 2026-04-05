@@ -1,6 +1,6 @@
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 export default function CooldownPage() {
   const TIMEOUT = 10;
@@ -29,6 +29,15 @@ export default function CooldownPage() {
         <Text style={styles.subtitleText}>
           Put it back down to continue the session
         </Text>
+        <Pressable
+          onPress={async () => {
+            router.back();
+          }}
+        >
+          <Text style={{ color: "red", paddingLeft: 16 }}>
+            Simulate Putdown
+          </Text>
+        </Pressable>
       </View>
     </SafeAreaView>
   );

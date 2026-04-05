@@ -4,19 +4,20 @@ import {
   saveBestSession,
   saveLastSession,
 } from "@/utils/storage";
-import { useRouter } from "expo-router";
-import { useEffect, useState } from "react";
+import { useFocusEffect, useRouter } from "expo-router";
+import { useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 export default function ActivePage() {
   const [elapsed, setElapsed] = useState(0);
   const router = useRouter();
-  useEffect(() => {
+
+  useFocusEffect(() => {
     const interval = setInterval(() => {
       setElapsed((prev) => prev + 1);
     }, 1000);
     return () => clearInterval(interval);
-  }, []);
+  });
   return (
     <SafeAreaView style={styles.safe}>
       <View style={styles.container}>
@@ -25,7 +26,6 @@ export default function ActivePage() {
         </Text>
         <Pressable
           onPress={async () => {
-            alert("Pickup Simulated");
             await saveLastSession(elapsed);
             const best = await getBestSession();
             if (elapsed > (best ?? 0)) {
