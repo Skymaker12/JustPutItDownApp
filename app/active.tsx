@@ -32,7 +32,7 @@ export default function ActivePage() {
               await saveBestSession(elapsed);
             }
 
-            router.back();
+            router.push("/cooldown");
           }}
         >
           <Text style={{ color: "red", paddingLeft: 16 }}>Simulate Pickup</Text>
@@ -59,9 +59,3 @@ const styles = StyleSheet.create({
     fontSize: 64,
   },
 });
-
-async function checkBest(elapsed: number) {
-  if (elapsed > ((await getBestSession()) ?? 0)) {
-    saveBestSession(elapsed);
-  }
-}
