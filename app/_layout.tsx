@@ -1,8 +1,4 @@
-import {
-  DarkTheme,
-  DefaultTheme,
-  ThemeProvider,
-} from "@react-navigation/native";
+import { DarkTheme, ThemeProvider } from "@react-navigation/native";
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import "react-native-reanimated";
@@ -13,7 +9,7 @@ export default function RootLayout() {
   const colorScheme = useColorScheme();
 
   return (
-    <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
+    <ThemeProvider value={DarkTheme}>
       <Stack
         screenOptions={{
           headerShown: false,
@@ -23,7 +19,10 @@ export default function RootLayout() {
       >
         <Stack.Screen
           name="leaderboard"
-          options={{ presentation: "modal", animation: "default" }}
+          options={{
+            presentation: "modal",
+            animation: "slide_from_bottom",
+          }}
         />
         <Stack.Screen name="active" />
         <Stack.Screen name="index" />
