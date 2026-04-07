@@ -1,3 +1,4 @@
+import { flash } from "@/utils/flashlight";
 import { currentElapsed, setCurrentElapsed } from "@/utils/sessionStore";
 import { formatTimeCompactSeconds } from "@/utils/storage";
 import { useFocusEffect, useRouter } from "expo-router";
@@ -10,6 +11,7 @@ export default function ActivePage() {
 
   useFocusEffect(
     useCallback(() => {
+      flash(3);
       const interval = setInterval(() => {
         setElapsed((prev) => {
           setCurrentElapsed(prev + 1);
