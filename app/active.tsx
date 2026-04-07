@@ -1,3 +1,4 @@
+import { useAccelerometer } from "@/hooks/useAccelerometer";
 import {
   formatTimeCompactSeconds,
   getBestSession,
@@ -5,12 +6,14 @@ import {
   saveLastSession,
 } from "@/utils/storage";
 import { useFocusEffect, useRouter } from "expo-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 export default function ActivePage() {
   const [elapsed, setElapsed] = useState(0);
+  const [hasBeenFaceDown, setHasBeenFaceDown] = useState(false);
   const router = useRouter();
+  const isFaceDown = useAccelerometer();
 
   useFocusEffect(() => {
     const interval = setInterval(() => {
@@ -18,6 +21,22 @@ export default function ActivePage() {
     }, 1000);
     return () => clearInterval(interval);
   });
+
+  useEffect(() => {
+    if (isFaceDown) setHasBeenFaceDown(true);
+    if (!isFaceDown && hasBeenFaceDown) {
+      router.navigate("/cooldown");
+    }
+
+    async function save() {
+      await saveLastSession(elapsed);
+      const best = await getBestSession();
+      if (elapsed > (best ?? 0)) {
+        await saveBestSession(elapsed);
+      }
+    }
+    save();
+  }, [router, isFaceDown, hasBeenFaceDown, elapsed]);
   return (
     <SafeAreaView style={styles.safe}>
       <View style={styles.container}>

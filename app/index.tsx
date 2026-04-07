@@ -1,3 +1,4 @@
+import { useAccelerometer } from "@/hooks/useAccelerometer";
 import {
   formatTimeCompactSeconds,
   getBestSession,
@@ -7,7 +8,7 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFocusEffect, useRouter } from "expo-router";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 export default function HomeScreen() {
@@ -18,6 +19,13 @@ export default function HomeScreen() {
   const [lastSession, setLastSession] = useState<number | null>(0);
   const [username, setUsername] = useState<string | null>("");
   const [isloading, setIsLoading] = useState(true);
+
+  const isFaceDown = useAccelerometer();
+
+  useEffect(() => {
+    if (isFaceDown) router.push("/active");
+    console.log("Session Active");
+  }, [isFaceDown, router]);
 
   useFocusEffect(
     useCallback(() => {

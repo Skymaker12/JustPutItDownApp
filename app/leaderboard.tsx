@@ -11,10 +11,11 @@ export default function LeaderboardPage() {
   return (
     <BlurView intensity={40} tint="dark" style={styles.safe}>
       <View style={styles.header}>
-        <Text style={styles.headerText}>Global.</Text>
+        <Text style={styles.headerText}>Global</Text>
         <Text style={styles.headerSubText}>All time best sessions.</Text>
       </View>
       <FlatList
+        contentContainerStyle={{ paddingHorizontal: 16 }}
         data={data}
         keyExtractor={(item) => item.rank.toString()}
         renderItem={({ item }) => (
