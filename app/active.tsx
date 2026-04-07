@@ -1,42 +1,24 @@
-import { useAccelerometer } from "@/hooks/useAccelerometer";
-import {
-  formatTimeCompactSeconds,
-  getBestSession,
-  saveBestSession,
-  saveLastSession,
-} from "@/utils/storage";
+import { currentElapsed, setCurrentElapsed } from "@/utils/sessionStore";
+import { formatTimeCompactSeconds } from "@/utils/storage";
 import { useFocusEffect, useRouter } from "expo-router";
-import { useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 export default function ActivePage() {
   const [elapsed, setElapsed] = useState(0);
-  const [hasBeenFaceDown, setHasBeenFaceDown] = useState(false);
   const router = useRouter();
-  const isFaceDown = useAccelerometer();
 
-  useFocusEffect(() => {
-    const interval = setInterval(() => {
-      setElapsed((prev) => prev + 1);
-    }, 1000);
-    return () => clearInterval(interval);
-  });
-
-  useEffect(() => {
-    if (isFaceDown) setHasBeenFaceDown(true);
-    if (!isFaceDown && hasBeenFaceDown) {
-      router.navigate("/cooldown");
-    }
-
-    async function save() {
-      await saveLastSession(elapsed);
-      const best = await getBestSession();
-      if (elapsed > (best ?? 0)) {
-        await saveBestSession(elapsed);
-      }
-    }
-    save();
-  }, [router, isFaceDown, hasBeenFaceDown, elapsed]);
+  useFocusEffect(
+    useCallback(() => {
+      const interval = setInterval(() => {
+        setElapsed((prev) => {
+          setCurrentElapsed(prev + 1);
+          return prev + 1;
+        });
+      }, 1000);
+      return () => clearInterval(interval);
+    }, []),
+  );
   return (
     <SafeAreaView style={styles.safe}>
       <View style={styles.container}>
@@ -44,14 +26,11 @@ export default function ActivePage() {
           {formatTimeCompactSeconds(elapsed)}
         </Text>
         <Pressable
-          onPress={async () => {
-            await saveLastSession(elapsed);
-            const best = await getBestSession();
-            if (elapsed > (best ?? 0)) {
-              await saveBestSession(elapsed);
-            }
-
-            router.push("/cooldown");
+          onPress={() => {
+            router.push({
+              pathname: "/cooldown",
+              params: { sessionElapsed: currentElapsed },
+            });
           }}
         >
           <Text style={{ color: "red", paddingLeft: 16 }}>Simulate Pickup</Text>

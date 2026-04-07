@@ -1,13 +1,42 @@
+import { useAccelerometer } from "@/hooks/useAccelerometer";
+import { currentElapsed } from "@/utils/sessionStore";
 import { DarkTheme, ThemeProvider } from "@react-navigation/native";
-import { Stack } from "expo-router";
+import { Stack, usePathname, useRouter } from "expo-router";
 import { StatusBar } from "expo-status-bar";
+import { useEffect, useRef } from "react";
 import "react-native-reanimated";
 
-import { useColorScheme } from "@/hooks/use-color-scheme";
+function NavigationController() {
+  const isFaceDown = useAccelerometer();
+  const router = useRouter();
+  const pathname = usePathname();
+  const hasBeenFaceDown = useRef(false);
+
+  useEffect(() => {
+    if (isFaceDown) hasBeenFaceDown.current = true;
+
+    if (pathname === "/") {
+      if (isFaceDown) router.navigate("/active");
+    }
+
+    if (pathname === "/active") {
+      if (!isFaceDown && hasBeenFaceDown.current) {
+        router.navigate({
+          pathname: "/cooldown",
+          params: { sessionElapsed: currentElapsed },
+        });
+      }
+    }
+
+    if (pathname === "/cooldown") {
+      if (isFaceDown) router.back();
+    }
+  }, [isFaceDown, pathname, router]);
+
+  return null;
+}
 
 export default function RootLayout() {
-  const colorScheme = useColorScheme();
-
   return (
     <ThemeProvider value={DarkTheme}>
       <Stack
@@ -29,6 +58,7 @@ export default function RootLayout() {
         <Stack.Screen name="onboarding" />
         <Stack.Screen name="cooldown" />
       </Stack>
+      <NavigationController />
       <StatusBar style="light" />
     </ThemeProvider>
   );

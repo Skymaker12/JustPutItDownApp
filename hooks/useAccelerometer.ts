@@ -14,8 +14,8 @@ export function useAccelerometer() {
         return prev;
       });
 
-      if (isFaceDown) console.log(`Phone is face down`);
-      if (!isFaceDown) console.log(`Phone is face up`);
+      //   if (isFaceDown) console.log(`Phone is face down`);
+      //   if (!isFaceDown) console.log(`Phone is face up`);
     });
 
     return () => subscription.unsubscribe();

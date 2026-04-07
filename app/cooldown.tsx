@@ -1,10 +1,17 @@
-import { useRouter } from "expo-router";
+import {
+  getBestSession,
+  saveBestSession,
+  saveLastSession,
+} from "@/utils/storage";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 export default function CooldownPage() {
   const TIMEOUT = 10;
   const [elapsed, setElapsed] = useState(TIMEOUT);
+  const { sessionElapsed } = useLocalSearchParams();
+  const activeTime = Number(sessionElapsed);
   const router = useRouter();
 
   useEffect(() => {
@@ -15,8 +22,19 @@ export default function CooldownPage() {
   }, []);
 
   useEffect(() => {
-    if (elapsed === 0) router.push("/");
-  }, [elapsed, router]);
+    if (elapsed === 0) {
+      async function save() {
+        await saveLastSession(activeTime);
+        const best = await getBestSession();
+        if (activeTime > (best ?? 0)) {
+          await saveBestSession(activeTime);
+        }
+      }
+      save();
+      router.dismissAll();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [elapsed]);
 
   return (
     <SafeAreaView style={styles.safe}>
@@ -30,7 +48,7 @@ export default function CooldownPage() {
           Put it back down to continue the session
         </Text>
         <Pressable
-          onPress={async () => {
+          onPress={() => {
             router.back();
           }}
         >
