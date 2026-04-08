@@ -18,3 +18,20 @@ export async function fetchLeaderboard() {
 
   return data;
 }
+
+export async function fetchUserRank(username: string) {
+  const { count } = await supabase
+    .from("sessions")
+    .select("*", { count: "exact", head: true })
+    .gt(
+      "duration",
+      supabase
+        .from("sessions")
+        .select("duration")
+        .eq("username", username)
+        .order("duration", { ascending: false })
+        .limit(1),
+    );
+
+  return (count ?? 0) * 1;
+}

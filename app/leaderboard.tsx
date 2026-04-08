@@ -1,4 +1,4 @@
-import { formatTimeCompactSeconds } from "@/utils/storage";
+import { formatTimeCompactSeconds, getUsername } from "@/utils/storage";
 import { fetchLeaderboard } from "@/utils/supabase";
 import { BlurView } from "expo-blur";
 import { useEffect, useState } from "react";
@@ -14,11 +14,16 @@ export default function LeaderboardPage() {
   const [data, setData] = useState<{ username: string; duration: number }[]>(
     [],
   );
+  const [userRank, setUserRank] = useState<number>(0);
 
   useEffect(() => {
     async function load() {
       const data = await fetchLeaderboard();
+      const username = await getUsername();
+      const rank =
+        (data ?? []).findIndex((item) => item.username === username) + 1;
       setData(data ?? []);
+      setUserRank(rank);
     }
     load();
   }, []);
@@ -91,7 +96,7 @@ export default function LeaderboardPage() {
         }}
       >
         <Text style={{ color: "#FFF", fontWeight: "bold", fontSize: 24 }}>
-          You are ranked #11
+          {userRank !== 0 ? `You are ranked ${userRank}` : `Unranked`}
         </Text>
       </View>
     </BlurView>
