@@ -14,8 +14,10 @@ export default function ActivePage() {
       flash(3);
       const interval = setInterval(() => {
         setElapsed((prev) => {
-          setCurrentElapsed(prev + 1);
-          return prev + 1;
+          const next = prev + 1;
+          setCurrentElapsed(next);
+          if (next > 0 && next % 30 === 0) flash(2);
+          return next;
         });
       }, 1000);
       return () => clearInterval(interval);
