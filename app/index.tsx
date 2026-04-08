@@ -5,7 +5,6 @@ import {
   getUsername,
 } from "@/utils/storage";
 import { Ionicons } from "@expo/vector-icons";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFocusEffect, useRouter } from "expo-router";
 import { useCallback, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
@@ -99,25 +98,6 @@ export default function HomeScreen() {
             {lastSession ? formatTimeCompactSeconds(lastSession) : "-"}
           </Text>
         </View>
-      </View>
-      <View style={{ flexDirection: "row", gap: 12 }}>
-        <Pressable
-          onPress={() => {
-            AsyncStorage.clear();
-            alert("Async Storage Cleared");
-          }}
-        >
-          <Text style={{ color: "red", paddingLeft: 16 }}>Reset Storage</Text>
-        </Pressable>
-        <Pressable
-          onPress={() => {
-            router.push("/active");
-          }}
-        >
-          <Text style={{ color: "red", paddingLeft: 16 }}>
-            Start Demo Session
-          </Text>
-        </Pressable>
       </View>
     </SafeAreaView>
   );

@@ -1,13 +1,12 @@
 import { flash } from "@/utils/flashlight";
-import { currentElapsed, setCurrentElapsed } from "@/utils/sessionStore";
+import { setCurrentElapsed } from "@/utils/sessionStore";
 import { formatTimeCompactSeconds } from "@/utils/storage";
-import { useFocusEffect, useRouter } from "expo-router";
+import { useFocusEffect } from "expo-router";
 import { useCallback, useState } from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 export default function ActivePage() {
   const [elapsed, setElapsed] = useState(0);
-  const router = useRouter();
 
   useFocusEffect(
     useCallback(() => {
@@ -16,7 +15,7 @@ export default function ActivePage() {
         setElapsed((prev) => {
           const next = prev + 1;
           setCurrentElapsed(next);
-          if (next > 0 && next % 30 === 0) flash(2);
+          if (next > 0 && next % 1800 === 0) flash(2);
           return next;
         });
       }, 1000);
@@ -29,16 +28,6 @@ export default function ActivePage() {
         <Text style={styles.timerText}>
           {formatTimeCompactSeconds(elapsed)}
         </Text>
-        <Pressable
-          onPress={() => {
-            router.push({
-              pathname: "/cooldown",
-              params: { sessionElapsed: currentElapsed },
-            });
-          }}
-        >
-          <Text style={{ color: "red", paddingLeft: 16 }}>Simulate Pickup</Text>
-        </Pressable>
       </View>
     </SafeAreaView>
   );
