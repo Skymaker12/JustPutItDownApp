@@ -1,8 +1,10 @@
 import {
   getBestSession,
+  getUsername,
   saveBestSession,
   saveLastSession,
 } from "@/utils/storage";
+import { submitSession } from "@/utils/supabase";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
@@ -28,6 +30,8 @@ export default function CooldownPage() {
         const best = await getBestSession();
         if (activeTime > (best ?? 0)) {
           await saveBestSession(activeTime);
+          const username = await getUsername();
+          submitSession(username ?? "anonymous", activeTime);
         }
       }
       save();

@@ -1,13 +1,28 @@
+import { formatTimeCompactSeconds } from "@/utils/storage";
+import { fetchLeaderboard } from "@/utils/supabase";
 import { BlurView } from "expo-blur";
+import { useEffect, useState } from "react";
 import { FlatList, StyleSheet, Text, View } from "react-native";
-
 export default function LeaderboardPage() {
-  const data = [
+  const fakeData = [
     { rank: 1, username: "Cam", time: "4h 4m 4s" },
     { rank: 2, username: "Josh", time: "3h 3m 3s" },
     { rank: 3, username: "Jesse", time: "2h 2m 2s" },
     { rank: 4, username: "Caleb", time: "1h 1m 1s" },
   ];
+
+  const [data, setData] = useState<{ username: string; duration: number }[]>(
+    [],
+  );
+
+  useEffect(() => {
+    async function load() {
+      const data = await fetchLeaderboard();
+      setData(data ?? []);
+    }
+    load();
+  }, []);
+
   return (
     <BlurView intensity={40} tint="dark" style={styles.safe}>
       <View style={styles.header}>
@@ -17,8 +32,8 @@ export default function LeaderboardPage() {
       <FlatList
         contentContainerStyle={{ paddingHorizontal: 16 }}
         data={data}
-        keyExtractor={(item) => item.rank.toString()}
-        renderItem={({ item }) => (
+        keyExtractor={(item) => item.username.toString()}
+        renderItem={({ item, index }) => (
           <View
             style={{
               flexDirection: "row",
@@ -32,12 +47,12 @@ export default function LeaderboardPage() {
           >
             <Text
               style={{
-                color: item.rank <= 3 ? "#DEAF57" : "rgba(255,255,255, 0.4)",
+                color: index + 1 <= 3 ? "#DEAF57" : "rgba(255,255,255, 0.4)",
                 fontSize: 24,
                 fontWeight: "bold",
               }}
             >
-              {item.rank}
+              {index + 1}
             </Text>
             <Text
               style={{
@@ -52,13 +67,13 @@ export default function LeaderboardPage() {
             </Text>
             <Text
               style={{
-                color: item.rank <= 3 ? "#DEAF57" : "#FFFFFF",
+                color: index + 1 <= 3 ? "#DEAF57" : "#FFFFFF",
                 fontSize: 24,
                 fontWeight: "bold",
                 textAlign: "right",
               }}
             >
-              {item.time}
+              {formatTimeCompactSeconds(item.duration)}
             </Text>
           </View>
         )}
